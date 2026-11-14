@@ -30,7 +30,7 @@
     "test": "node --test test/*.test.mjs"
   },
   "engines": {
-    "node": ">=18.3"
+    "node": ">=20.12"
   },
   "keywords": [
     "agent-skills",
@@ -40,5 +40,8 @@
     "antigravity",
     "claude-code"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "1.9.0"
+  }
 }

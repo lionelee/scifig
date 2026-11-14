@@ -30,7 +30,7 @@ npx scifig-agents setup
 
 ## 安装
 
-需要 Node.js 18.3 以上。运行 Python 脚本需要 [uv](https://docs.astral.sh/uv/)，脚本的依赖在第一次运行时由 uv 自动下载，版本固定在测试通过的那一天。
+需要 Node.js 20.12 以上。运行 Python 脚本需要 [uv](https://docs.astral.sh/uv/)，脚本的依赖在第一次运行时由 uv 自动下载，版本固定在测试通过的那一天。
 
 ```sh
 npx scifig-agents setup              # 列出计划，确认后安装到检测到的 agent
@@ -67,7 +67,7 @@ Gemini CLI 和 DeepSeek Harness 设了 `GEMINI_CLI_HOME`、`DSH_AGENTS_HOME` 时
 - 上次安装被中断时会留下复制了一半的临时目录，下次 setup 会先清掉。
 - 装好后要新开一个 agent 会话，才会加载到这个 skill。
 
-同一个包在 GitHub Packages 上叫 `@lionelee/scifig-agents`。不经过 npm 仓库的话，可以直接从 GitHub 运行 `npx github:lionelee/scifig setup`，或者克隆仓库后运行 `node bin/scifig.mjs setup`。
+同一个包在 GitHub Packages 上叫 `@lionelee/scifig-agents`。不经过 npm 仓库的话，可以直接从 GitHub 运行 `npx github:lionelee/scifig setup`，或者克隆仓库，先运行一次 `npm install`，再运行 `node bin/scifig.mjs setup`。
 
 ## 使用前须知
 

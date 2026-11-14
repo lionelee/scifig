@@ -17,6 +17,7 @@ test("the npm package ships the installer and the skill, and no junk, tests or e
     "bin/scifig.mjs",
     "lib/clients.mjs",
     "lib/install.mjs",
+    "lib/tui.mjs",
     "skills/scifig/SKILL.md",
     "skills/scifig/references/journal-figure-requirements.json",
     "skills/scifig/scripts/journals.py",

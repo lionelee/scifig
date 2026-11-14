@@ -30,7 +30,7 @@ Then ask your agent in plain words: "Draw a Transformer architecture figure for 
 
 ## Install
 
-Needs Node.js 18.3 or later. The Python scripts need [uv](https://docs.astral.sh/uv/), which downloads their dependencies on first run, pinned to the day they were tested.
+Needs Node.js 20.12 or later. The Python scripts need [uv](https://docs.astral.sh/uv/), which downloads their dependencies on first run, pinned to the day they were tested.
 
 ```sh
 npx scifig-agents setup              # show the plan, install after you confirm
@@ -41,7 +41,7 @@ npx scifig-agents doctor             # install state of each agent, image tools,
 npx scifig-agents uninstall          # remove only what this tool installed
 ```
 
-The same package is on GitHub Packages as `@lionelee/scifig-agents`. Without a registry, run it straight from GitHub with `npx github:lionelee/scifig setup`, or from a clone of this repository with `node bin/scifig.mjs setup`.
+The same package is on GitHub Packages as `@lionelee/scifig-agents`. Without a registry, run it straight from GitHub with `npx github:lionelee/scifig setup`, or from a clone of this repository: run `npm install` once, then `node bin/scifig.mjs setup`.
 
 ### Supported agents
 

@@ -262,6 +262,19 @@ test("doctor lists the agents it found and names the others", () => {
   assert.match(lines.find((line) => line.includes("Not found:")), /Cursor/);
 });
 
+test("--help lists --accessible", () => {
+  const result = run(makeHome(), ["--help"]);
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /--accessible\s+Ask about one folder at a time instead of showing a list/);
+});
+
+test("--accessible changes nothing about a setup that cannot ask", () => {
+  const home = makeHome(".codex");
+  const out = json(run(home, ["setup", "--accessible", "--yes", "--json"]));
+  assert.equal(out.applied, true);
+  assert.ok(existsSync(join(codexTarget(home), "SKILL.md")));
+});
+
 test("--version prints the package version", () => {
   const result = run(makeHome(), ["--version"]);
   assert.equal(result.status, 0);
