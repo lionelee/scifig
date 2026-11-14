@@ -19,6 +19,8 @@ jobs:
       - name: Node tests
         run: npm test
       - uses: astral-sh/setup-uv@v10.3.3  # this action publishes no major-version tag
+        with:
+          cache-dependency-glob: skills/scifig/scripts/*.py  # the scripts declare their dependencies in PEP 723 headers
       - name: Python tests
         env:
           PYTHONDONTWRITEBYTECODE: "1"
