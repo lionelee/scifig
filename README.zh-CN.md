@@ -54,7 +54,7 @@ npx scifig-agents uninstall          # 只删除本工具安装的目录
 
 在终端里运行时，`setup` 会列出这些 agent 读的 10 个 skills 目录，检测到的 agent 读的目录已经勾好。用方向键移动，空格勾选或取消，回车确认；它会先列出要做的改动，再问一次。加 `--accessible` 会逐个目录提问，不显示列表。用 `--client` 或 `--dir` 指定了目标就跳过列表，加 `--yes` 则不再提问。
 
-自动检测的 agent 和 [rea-agents](https://www.npmjs.com/package/rea-agents) 6.9.0 一样，共 29 个。判断规则也一样：agent 的配置文件或它自己的目录存在，就算装了。`--client` 用的也是同一套 id，`doctor` 会列出这台机器上找到了哪些。skill 装到哪里分两种情况：
+自动检测的 agent 共 29 个。判断规则是：agent 的配置文件或它自己的目录存在，就算装了。`doctor` 会列出这台机器上找到了哪些。skill 装到哪里分两种情况：
 
 | skill 装到哪里 | Agent（`--client` 的 id） |
 |---|---|
@@ -69,7 +69,7 @@ Gemini CLI 和 DeepSeek Harness 设了 `GEMINI_CLI_HOME`、`DSH_AGENTS_HOME` 时
 - **Antigravity**：内置 `generate_image`。只按官方文档核对过，没有实际跑过。
 - **其它 agent**：没有已知的内置生图工具。数据图表、代码绘图、导出、拼图、可编辑版本、投稿检查、图注都能用；概念图和结构图只能用代码画（观感朴素一些），或者另外接入生图工具。
 
-某个 agent 实际会不会从这些目录加载 skill，由它自己决定；目录的选法和 rea-agents 保持一致。
+某个 agent 实际会不会从这些目录加载 skill，由它自己决定。
 
 安装器的行为：
 

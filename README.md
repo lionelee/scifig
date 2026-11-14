@@ -58,7 +58,7 @@ The same package is on GitHub Packages as `@lionelee/scifig-agents`. Without a r
 
 ### Supported agents
 
-Detection matches [rea-agents](https://www.npmjs.com/package/rea-agents) 6.9.0: the same 29 agents, the same `--client` ids, and the same rule, under which an agent is present when its configuration file or its own folder exists. `doctor` lists the ones it finds on your machine.
+It detects 29 agents. An agent counts as present when its configuration file or its own folder exists, and `doctor` lists the ones it finds on your machine.
 
 | Where the skill goes | Agents (`--client` id) |
 |---|---|
@@ -73,7 +73,7 @@ Finished generated figures need an agent with an image tool:
 - **Antigravity**: built-in `generate_image`. Checked against its documentation, not yet run.
 - **Other agents**: no known built-in image tool. Charts, code-drawn diagrams, export, panels, editable versions, checks and legends all work; concept and structure figures are drawn in code and look plainer, unless you connect an image tool.
 
-Whether an agent actually loads skills from these folders is up to the agent; the folders follow rea-agents.
+Whether an agent actually loads skills from these folders is up to the agent.
 
 How the installer behaves:
 
@@ -124,7 +124,7 @@ The measurements behind these notes are recorded in [CALIBRATION.md](CALIBRATION
 
 ```
 bin/scifig.mjs        installer entry point: setup, uninstall, doctor
-lib/                  the agent table (aligned with rea-agents), the install logic and the terminal prompts
+lib/                  the agent table, the install logic and the terminal prompts
 skills/scifig/
   SKILL.md            entry point: routes each request
   references/         illustration, figure recipes, diagrams, charts, export and checks, AI policies, journal data
