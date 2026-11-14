@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PassThrough, Writable } from "node:stream";
 import { stripVTControlCharacters } from "node:util";
-import { initialSelection, isInteractive, setupFlow } from "../lib/tui.mjs";
+import { initialSelection, isInteractive, setupFlow, uninstallFlow } from "../lib/tui.mjs";
 
 const HOME = "/home/u";
 const KEY = { enter: "\r", space: " ", down: "\x1b[B", right: "\x1b[C", ctrlC: "\x03" };
@@ -226,4 +226,41 @@ test("a filesystem error stops setup with one line that names the folder", async
   assert.equal(code, 1);
   assert.match(text, /✗ {2}Claude Code: EACCES: permission denied/);
   assert.doesNotMatch(text, /Done\./);
+});
+
+async function runUninstall({ targets, steps }) {
+  const input = new PassThrough();
+  const screen = new Screen();
+  typist(screen, input, steps);
+  const removed = [];
+  const code = await uninstallFlow({ targets, apply: (path) => removed.push(path), home: HOME, io: { input, output: screen } });
+  return { code, removed, text: plain(screen) };
+}
+
+test("uninstall shows what it will remove and what it leaves, then removes after Enter", async () => {
+  const ours = { ...SHARED, action: "remove", installed_version: "0.1.0" };
+  const { code, removed, text } = await runUninstall({ targets: [ours, FOREIGN], steps: [["Remove this copy?", KEY.enter]] });
+  assert.equal(code, 0);
+  assert.deepEqual(removed, [ours.path]);
+  assert.match(text, /REMOVE {2}Shared folder · 0\.1\.0/);
+  assert.match(text, /SKIP {4}Hermes/);
+  assert.match(text, /not installed by scifig-agents; left alone/);
+  assert.match(text, /Removed {2}Shared folder {2}~\/\.agents\/skills\/scifig/);
+  assert.match(text, /Removed\./);
+});
+
+test("uninstall answered No removes nothing", async () => {
+  const ours = { ...CLAUDE, action: "remove", installed_version: "0.2.0" };
+  const { code, removed, text } = await runUninstall({ targets: [ours], steps: [["Remove this copy?", KEY.right + KEY.enter]] });
+  assert.equal(code, 1);
+  assert.deepEqual(removed, []);
+  assert.match(text, /Uninstall cancelled\. Nothing was removed\./);
+});
+
+test("uninstall with nothing of ours to remove says so and asks nothing", async () => {
+  const { code, removed, text } = await runUninstall({ targets: [FOREIGN], steps: [] });
+  assert.equal(code, 0);
+  assert.deepEqual(removed, []);
+  assert.match(text, /Nothing to remove\./);
+  assert.doesNotMatch(text, /Remove th/);
 });

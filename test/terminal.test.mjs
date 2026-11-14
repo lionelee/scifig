@@ -69,3 +69,12 @@ test("in a terminal, setup lists the folders, ticks those of the agents found, a
   assert.ok(existsSync(join(home, ".gemini", "config", "skills", "scifig", "SKILL.md")));
   assert.equal(existsSync(join(home, ".claude", "skills", "scifig")), false);
 });
+
+test("in a terminal, uninstall shows what it will remove and asks first", { skip }, async () => {
+  const home = makeHome(".codex");
+  assert.equal(spawnSync(process.execPath, [CLI, "setup", "--yes"], { env: env(home) }).status, 0);
+  const { code, screen } = await runInTerminal(home, ["uninstall"], [["Remove this copy?", "\r"]]);
+  assert.equal(code, 0, screen);
+  assert.ok(screen.includes(`REMOVE  Shared folder · ${VERSION}`), screen);
+  assert.equal(existsSync(join(home, ".agents", "skills", "scifig")), false);
+});

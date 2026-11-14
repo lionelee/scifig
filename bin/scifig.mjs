@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { CLIENTS, isPresent, sharedSkillsDir, skillsDirOf } from "../lib/clients.mjs";
 import { SKILL_NAME, applyInstall, applyUninstall, digestTree, planInstall, planUninstall, readManifest } from "../lib/install.mjs";
-import { isInteractive, setupFlow } from "../lib/tui.mjs";
+import { isInteractive, setupFlow, uninstallFlow } from "../lib/tui.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VERSION = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).version;
@@ -183,10 +183,14 @@ function setup(options) {
 }
 
 function uninstall(options) {
+  const context = hostContext();
   // With no explicit choice, look everywhere and report only folders that exist.
-  const targets = selectTargets(options, hostContext(), () => true)
+  const targets = selectTargets(options, context, () => true)
     .map((t) => ({ ...t, ...planUninstall(t.path) }))
     .filter((t) => isExplicit(options) || t.action !== "absent");
+  if (isInteractive(options)) {
+    return uninstallFlow({ targets, accessible: options.accessible, apply: applyUninstall, home: context.home });
+  }
   return execute("uninstall", options, targets, {
     apply: applyUninstall,
     idle: ["absent", "blocked"],
