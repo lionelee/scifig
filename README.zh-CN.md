@@ -71,7 +71,7 @@ Gemini CLI 和 DeepSeek Harness 设了 `GEMINI_CLI_HOME`、`DSH_AGENTS_HOME` 时
 
 ## 使用前须知
 
-下面提到的实测数字都记在 [CALIBRATION.md](CALIBRATION.md) 里。
+下面提到的实测数字都记在 [CALIBRATION.md](CALIBRATION.md)（英文）里。
 
 - **成品观感取决于 agent 自带的生图工具。** 出图效果只在 Codex 的 `image_gen` 上实测过（191 张图，63 次端到端测试），Antigravity 没有实测。没有内置生图工具的 agent（例如 Claude Code）只能用代码画，观感朴素一些。
 - **连线是首稿最常出问题的地方。** 内容画满的图里，大约每五张就有一张要为连线改一次图。skill 里的连线规则就是针对这些问题写的：

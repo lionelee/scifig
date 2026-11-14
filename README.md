@@ -73,7 +73,7 @@ How the installer behaves:
 
 ## Good to know
 
-The measurements behind these notes are recorded in [CALIBRATION.md](CALIBRATION.md) (in Chinese).
+The measurements behind these notes are recorded in [CALIBRATION.md](CALIBRATION.md).
 
 - **The look comes from the agent's own image tool.** It has been tested only with Codex `image_gen`: 191 figures in 63 end-to-end sessions. Antigravity has not been tested. An agent without an image tool (Claude Code, for one) draws figures in code, and they look plainer.
 - **Connectors are where first drafts go wrong most.** About one full figure in five needs an edit for a line. The skill's line rules were written from those faults:

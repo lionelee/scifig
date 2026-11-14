@@ -1,187 +1,188 @@
-# 实测记录
+# Calibration record
 
-> 版本号在 2026-11-14 重置为 0.1.0，作为第一个公开版本。下文里的 0.4.x–0.5.x 是公开前内部迭代的编号；其中 0.5.2 就是重置后的 0.1.0。
+> The version number was reset to 0.1.0 on 2026-11-14 for the first public release. The 0.4.x–0.5.x numbers below are those of the internal iterations before it; 0.5.2 is what became 0.1.0.
 
-skill 的文档只写规则和必要的理由，规则背后的实测数字记在这里，以后改规则时拿来对照。这个文件不随 skill 安装，agent 不会读到。测量脚本和用法见 `eval/README.md`。
+The skill's documents carry the rules and the reasons they need; the measurements behind the rules are kept here, to compare against when a rule changes. This file is not installed with the skill, so agents never read it. The measuring scripts and how to run them are in [eval/README.md](eval/README.md).
 
-除另行注明的以外：
-- 出图都是 2026-11-12 至 13 日用 Codex 的 `image_gen` 生成的；
-- 对照对象是 SciDraw AI 的 79 张公开样例；
-- "端到端测试"指全新的 Codex 会话只拿到 skill 和需求，从写出图要求一路做到交付。
+Unless a line says otherwise:
 
-## 连线
+- every figure was generated with Codex `image_gen` on 2026-11-12 and 13;
+- the comparison is with the 79 public sample figures of SciDraw AI;
+- an "end-to-end run" is a fresh Codex session that gets only the skill and the request, and works from the brief to the delivered file.
 
-- 端到端测试共 63 次，其中 18 次首稿连线有问题。17 次改一两次就对了，1 次改两次仍不对。按问题分：
-  - 线穿过行或色带的名称：6 次；
-  - 箭头多画：3 次；
-  - 共用端点的几条线画乱：2 次；
-  - 必须交叉的线接错：1 次；
-  - 漏画：1 次；
-  - 线穿过图中物体的名称：1 次；
-  - 从另一条线上分出来的线（Transformer 的残差旁路）画乱：1 次；
-  - 图画满之后出现的问题：4 次，分别是反馈线接错卡片、箭头停在外框上、箭头落单、该画平头的画成了箭头。
-- 按现在的连线规则做的 39 次里，31 次首稿连线全对。
-  - 其中最后 20 次按现在的丰富程度做，4 次要为连线改图。
-  - 用左端竖栏的 9 张图，连线都是一次画对。
-  - 名称放在上方的 13 张里，6 张有线穿过名称。
-  - 残差旁路按"三段走向加分叉圆点"重写后，5 条旁路首稿全对。没有圆点和"框内没有别的线"这句时，两次试验各多出一条线。
+## Connectors
 
-## 文字
+- Of 63 end-to-end runs, 18 had a connector fault in the first draft. 17 were put right with one or two edits; one was still wrong after two. By kind of fault:
+  - a line through the name of a row or a band: 6;
+  - an extra arrowhead: 3;
+  - several lines that share an end drawn as a tangle: 2;
+  - lines that had to cross joined to the wrong boxes: 1;
+  - a line left out: 1;
+  - a line through the name of a drawn object: 1;
+  - lines that branch off another line (a Transformer's residual connections) drawn as a tangle: 1;
+  - faults that appeared once figures were drawn full: 4, namely a feedback line to the wrong card, an arrow stopping at a frame, an arrowhead on its own, and an arrowhead where a flat bar was asked for.
+- Of 39 runs made under the current connector rules, 31 had every line right at the first attempt.
+  - Of the last 20 of these, made as full as the skill now asks, 4 needed an edit for a line.
+  - All 9 figures with names in a left rail had every line right at the first attempt.
+  - Of 13 figures with names above their rows or bands, 6 had a line through a name.
+  - With the residual connections described as three legs and a dot where each branches off, all 5 were right in the first draft. Without the dot and the sentence that no other line runs inside the frame, two trials each had one line too many.
 
-- 端到端测试的头 43 次里，有 2 次图上的错字（"Questoin"、"ratiio"）被核对脚本报出来了，agent 看了一眼整张图，判成 OCR 认错，照常交付了。于是加了 `DIFFERS`：结论不能凭看图否决。
-- 0.4.2 在 61 张图约 2400 处标签上重跑：
-  - `DIFFERS` 4 处，都是真错；
-  - 之后它还报对过一个中文错字（"问"写成"间"）；
-  - 误判过一次：卡片边框紧挨着标签，被读成字母 I。
-- 让 3 个全新会话各拿一张有文字问题的旧图重新核对，3 次都按规定改了图：
-  - 2 次改一次就对了；
-  - 1 次改两次错字还在，按规定把那一行抹掉重写后才对。
-- 0.5.2 的核对规则，在 98 张端到端图、约 4100 处标签上和 0.5.1 逐条对比：
-  - 5 处真错字（"Questoin"、两处 "ratiio"、"间题"、"Takeaway:" 前缀）全部保留；
-  - 没有新增误判；
-  - 少了一处被当成文字的配图（核糖体和肽链被读成 "N000"）；
-  - 重复标签缺的那一处，现在会指出最接近的文字。
-- 合成图压力测试（`eval/text/stress_*.py`）中，写对的标签被误判为 `DIFFERS` 的次数：
+## Text
 
-  | 测试 | 0.5.1 | 0.5.2 |
+- In the first 43 end-to-end runs, the text check reported two typos in a figure ("Questoin", "ratiio"), and the agent glanced at the whole figure, blamed OCR and delivered it. That is why `DIFFERS` was added, as a verdict that a look at the figure does not overrule.
+- Rerun under 0.4.2 on about 2,400 labels in 61 figures:
+  - 4 `DIFFERS`, all real typos;
+  - it later also caught a wrong Chinese character (间 written for 问);
+  - one false verdict: the border of a card right before a label, read as the letter I.
+- Three fresh sessions were each given an old figure with a text fault to verify, and all three edited it as the rules say:
+  - two were right after one edit;
+  - one still had the typo after two edits, and was right once the line was erased and rewritten, as the rules then say.
+- The 0.5.2 check compared with 0.5.1, label by label, on about 4,100 labels in 98 end-to-end figures:
+  - all 5 real typos are still reported ("Questoin", "ratiio" twice, 间题, and a "Takeaway:" put before a label);
+  - no new false verdict;
+  - one picture fewer is reported as text (a ribosome and its peptide chain, read as "N000");
+  - a repeated label missing in one place now names the closest text there.
+- Synthetic stress tests (`eval/text/stress_*.py`): correct labels reported as `DIFFERS`:
+
+  | Test | 0.5.1 | 0.5.2 |
   |---|---|---|
-  | 卡片版式 | 1040 处中 3 处，都是 "Illumina" 读成 "llumina" | 0 |
-  | 边框紧贴文字 | 1260 处中 31 处 | 6 处 |
+  | Labels in cards | 3 of 1,040, all "Illumina" read as "llumina" | 0 |
+  | A card border right before the text | 31 of 1,260 | 6 |
 
-  边框测试剩下的 6 处，都是 OCR 在词中间多读出一个字母。在词中间时，规则按第一遍读数下结论，因为生图工具在词中间多写字母（"ratiio"）也是这个样子。
-- OCR（RapidOCR 1.4.4）的脾气：
-  - 按原尺寸读整张图时，几乎不会凭空多读出字母（约 3000 处标签中只有 1 处，就是边框读成 I）；
-  - 常把连着的两个相同细字母读成一个："ratiio" 换 45 种裁法读，10 次读成 "ratio"，而且置信度仍在 0.95 以上；
-  - 希腊字母、上下标每次都读错，而且错得一样；
-  - 大写 O 和数字 0、大写 I 和小写 l 经常互换。
+  The 6 left in the border test are all a letter that OCR put in inside a word. There the rules go by the first reading, because an image tool's own extra letter inside a word ("ratiio") looks just the same.
+- How OCR (RapidOCR 1.4.4) behaves:
+  - reading a whole figure at its own size, it hardly ever puts in a letter that is not there (once in about 3,000 labels: the card border read as I);
+  - it often reads two identical thin letters in a row as one: "ratiio", read in 45 different crops, came back as "ratio" 10 times, with a confidence still above 0.95;
+  - it misreads Greek letters, sub- and superscripts, the same way every time;
+  - it often swaps capital O and zero, and capital I and small l.
 
-## 观感和 SciDraw 样例的对照
+## Look, against SciDraw's samples
 
-- **配色**
-  - 样例色块的彩度（CIELAB）中位数约 8–9：31 张方框和卡片图的中位数是 8，一半在 7–11 之间，强色面积 2%；21 张场景图中位数 9，强色面积 4%。
-  - 带色值写出图要求时，7 张图读数为 7–15，强色面积 2–6%；不带色值的 9 张是 10–73。
-  - 写"pale pastel"时，色块比写"barely tinted, close to white"加色值浓一倍。
-  - 读数的参考：淡彩在 12 以下，粉彩约 20，饱和色 50 以上。
-  - 一次"只改颜色"的改图把读数从 24 降到 8。
-- **内容量**
-  - 样例分两类：每类图里较简的一半只有 10–33 行文字（路线图到 81 行）；较满的一半是它的两到四倍，看起来"像设计过"的是后一类。
-  - 较满一类的中位数：流程图 89、系统架构图 91、按年排的研究计划 111。
-  - 我们的实测：机器学习训练流程 81 条标签（样例同题 109 行），RAG 架构图 91 条，博士四年研究计划 100 条（样例同题 99 行），文字逐处核对无误。
-  - 技术路线图是另一种，样例只有 23–46 行，丰富在每一步的配图上。
-  - 2026-11-12 用这种写法出的 5 张图有 31–99 行，首稿全对；2026-11-13 的一张 89 行流程图（8 张卡片，每张配三四件物体的插画）也全对。
-- **注释**
-  - 加了括号注释、配图点名部件、面板每行一个小图标的流程图：105 行，12% 带注释，253 个图画部件。
-  - 样例同题：112 行、8%、306 个部件。
-  - 不加这些时：81 行、0%、183 个部件。
-- **字号**
-  - 图画满了字就小。铺满一页幻灯片时，60 和 81 行的图是 12 pt，89 行 11 pt，96 行 10.5 pt；样例里较满的那类是 8–9 pt。
-  - 同一张 33 处文字的技术路线图按 150 mm 宽印刷，横版字号 7–8 pt，竖版 10–12 pt。
-- **框线**
-  - 样例框线宽度的中位数是图宽的 0.15%。和 Codex 出图同尺寸的样例是 0.16%（2.7 px），更高分辨率的样例是 0.12%。
-  - 不同写法下我们出图的框线：
+- **Colour**
+  - The samples' fill chroma (CIELAB) has a median of about 8–9: 8 for 31 box and card diagrams, half of them between 7 and 11, with strong colour on 2% of the figure; 9 for 21 scenes, with strong colour on 4%.
+  - With colour codes in the brief, 7 figures read 7–15, with strong colour on 2–6%; 9 without them read 10–73.
+  - "Pale pastel" fills came back twice as strong as "barely tinted, close to white" with colour codes.
+  - For reference on this scale: faint tints read 12 or less, pastels about 20, saturated colours 50 or more.
+  - One edit that changed only the colours took a figure from 24 to 8.
+- **How much a figure carries**
+  - The samples come in two kinds: the plainer half of each type has 10–33 lines of text (roadmaps up to 81); the fuller half has two to four times as many, and those are the figures that look designed.
+  - Medians of the fuller kind: workflows 89, system architectures 91, research plans by year 111.
+  - Ours: a machine-learning training workflow with 81 labels (the sample on the same subject: 109 lines), a RAG architecture with 91, a four-year PhD research plan with 100 (the sample on the same subject: 99), every label read back as listed.
+  - Technical roadmaps are another kind: the samples have only 23–46 lines, and their richness is in the picture of each step.
+  - Five figures briefed this way on 2026-11-12 held 31–99 lines, all right at the first attempt; so was a workflow of 89 lines on 2026-11-13 (8 cards, each with an illustration of three or four objects).
+- **Glosses**
+  - A workflow briefed with glosses in parentheses, parts named in its pictures and a small icon on every row of its panels: 105 lines, 12% of them glossed, 253 drawn parts.
+  - The sample on the same subject: 112 lines, 8%, 306 parts.
+  - Without them: 81 lines, none glossed, 183 parts.
+- **Type size**
+  - The fuller the figure, the smaller its type. On a slide the figure fills: 12 pt at 60 and 81 lines, 11 pt at 89, 10.5 pt at 96; the fuller samples run at 8–9 pt.
+  - The same technical roadmap of 33 texts, printed 150 mm wide: 7–8 pt in landscape, 10–12 pt in portrait.
+- **Line weight**
+  - The samples' outlines are 0.15% of the figure's width at the median: 0.16% (2.7 px) in samples of an image tool's size, 0.12% in larger ones.
+  - Our outlines by the wording of the brief:
 
-    | 出图要求里的写法 | 框线宽度 |
+    | Wording in the brief | Outline width |
     |---|---|
-    | 只写"thin" | 2.6–4.3 px |
-    | 写"约 2 px" | 两张横版图为 2.8 和 3.4 px |
-    | 用现在的线宽句 | 同两份要求都是 2.1 px |
+    | "thin" only | 2.6–4.3 px |
+    | "about 2 pixels wide" | 2.8 and 3.4 px in two landscape figures |
+    | the current line-weight sentence | 2.1 px for the same two briefs |
 
-  - 用线宽句出的 5 张横版图里，4 张为 2.0–2.3 px（图宽的 0.12–0.14%），1 张的分区边框为 3.2 px；箭头 1.8–2.3 px。
-  - 一次"只改线宽"的改图，把框线从 4.3 px 改到 2.0 px，从 3.2 px 改到 2.5 px。
-- **配图**
-  - 样例的配图是三四件物体画成的实心小插画，不是线稿图标。一张图里图标大小的图形，各类中位数：
+  - Of 5 landscape figures made with the line-weight sentence, 4 read 2.0–2.3 px (0.12–0.14% of the width) and one read 3.2 px on the frames of its bands; arrows read 1.8–2.3 px.
+  - One edit that changed only the line weights took outlines from 4.3 px to 2.0, and from 3.2 px to 2.5.
+- **Pictures**
+  - The samples' pictures are small solid illustrations of three or four objects, not line icons. Icon-sized shapes per figure, median by type:
 
-    | 图类 | 个数 |
+    | Type | Count |
     |---|---|
-    | 流程图 | 29 |
-    | 图文摘要 | 25 |
-    | 机制图 | 24 |
-    | 路线图 | 19 |
-    | 模型架构 | 15 |
-    | 系统架构 | 12 |
-    | 框架图 | 11 |
+    | Workflow | 29 |
+    | Graphical abstract | 25 |
+    | Mechanism | 24 |
+    | Roadmap | 19 |
+    | Model architecture | 15 |
+    | System architecture | 12 |
+    | Framework | 11 |
 
-    这些图形占全图面积的 1–3%。
-  - 2026-11-12 同一份要求加不加"每个元素一幅配图"对比：流水线图 27→36 个，工作计划 9→16 个，中文路线图 0→23 个，文字都照样读对。
-  - 2026-11-13 改成三四件物体并加配图句之后：
-    - 8 张卡片的流程图：55 个，占 2.5%（之前 24 个、1.4%；样例同题 35 个、1.7%）；
-    - 框架图：19 个、4.0%（之前 13 个、0.3%）；
-    - 层叠网络：24 个、0.9%（之前 6 个、0.1%）。
+    These shapes cover 1–3% of a figure.
+  - On 2026-11-12, the same briefs with and without a picture for every element: a pipeline went from 27 shapes to 36, a work plan from 9 to 16, a roadmap in Chinese from none to 23, with every label still read back as listed.
+  - On 2026-11-13, with pictures of three or four objects and the picture sentence:
+    - a workflow of 8 cards: 55 shapes on 2.5% of its area (before: 24 on 1.4%; the sample on the same subject: 35 on 1.7%);
+    - a framework: 19 on 4.0% (before: 13 on 0.3%);
+    - a network of layer stacks: 24 on 0.9% (before: 6 on 0.1%).
 
-    卡片和方框的底色彩度没变，仍是 7–9，多出来的颜色都在插画里。
-  - 只写"细线小插画"时，生图工具返回的是线稿：图形个数一样，面积只有一半。
-- **元素少的图**：一张四个构念的框架图，按"放大铺满"的写法，字号占图高 3.6%，19 个配图形状，占全图 4%；同样内容用小方框画是 2.8%、13 个、0.3%。
-- **场景和细节**
-  - 场景里每样东西按形状和部件描述的机制图：9% 的行带括号注释，轮廓总长是对角线的 15–19 倍。
-  - 只点名、不描述时：0% 和 12 倍。
-  - 样例机制图：6% 和 21 倍。
-  - 机器学习训练流程的图画部件数从 183 到 373（样例同题 306），RAG 架构图从 191 到 238。
+    The fills of cards and boxes kept their chroma of 7–9: the colour that came in is inside the pictures.
+  - Asked only for "a small illustration, drawn in fine lines", the image tool returned outline drawings: as many shapes, on half the area.
+- **Figures of few elements**: a framework of four constructs, briefed to fill its canvas with large boxes, had type of 3.6% of its height and 19 pictorial shapes covering 4% of it; the same content in small boxes had 2.8%, 13 shapes and 0.3%.
+- **Scenes and detail**
+  - A mechanism whose things were described by form and parts: 9% of its lines with a gloss in parentheses, and an outline length of 15–19 times the figure's diagonal.
+  - The same mechanism with things only named: none, and 12 times.
+  - Published mechanism figures: 6%, and 21 times.
+  - Drawn parts went from 183 to 373 in a machine-learning training workflow (the sample on the same subject: 306), and from 191 to 238 in a RAG architecture.
 
-## 改图
+## Edits
 
-- 改图会重画整张图，没有遮罩。一次只改一个标题的改图，肉眼看只改了那一处，但全图边缘约百分之一的像素有位移。
-- 内容很满时，生图工具偶尔不按 16:9 返回（约 3:2）。0.5.0 那轮的 13 次里有 2 次，之前五十多张里只有 1 次。
+- An edit redraws the whole picture; there is no mask. An edit that changed one title changed nothing else the eye could find, yet about one pixel in a hundred shifted along edges all over the picture.
+- With very full content, the image tool now and then returns about 3:2 instead of 16:9: twice in 13 runs in the 0.5.0 round, once in over fifty figures before.
 
-## 分辨率和放大
+## Resolution and enlargement
 
-- Codex 的生图工具每次返回约 150 万像素（16:9 时 1672 × 941），没有尺寸参数，在出图要求里写像素尺寸也不起作用。SciDraw 的样例一半以上是 2048 × 1152 或更大。
-- `enlarge.py` 分 4 块的实测：
-  - 2 张 1672 × 941 的图放大到 2696 和 3000 px 宽；
-  - 1 张中文竖版路线图从 1086 × 1448 放大到 1843 × 2458，按 150 mm 印刷时从 184 dpi 提高到 312 dpi；
-  - 35、82、102 处文字逐处读回，只有一个大写 O 被 OCR 认成 0；
-  - 12 块重画全部对齐在 2 px 以内；
-  - 放大后线条同样细或更细，是图宽的 0.08–0.18%。
-- 分 6 块：1 张 1672 × 941 的图放大到 3545 × 1995（2.12 倍），87 处文字全部读回。
-- 同一条线在切口两侧的粗细：
-  - 两块之间差中位数 5%，最多 18%；
-  - 原图里同一段线本来就差中位数 3%，最多 19%；
-  - 边对边硬拼时会显出台阶，两侧渐变过渡后量不出台阶（实测 21 条线）。
-- 2026-11-14 在 4 次真实放大上量了拼接时"沿用原图底色"的校正：离墨迹 8–24 px 的白底平均改动 0 到 +1.4 个灰阶，变暗 5 级以上的像素不超过 2%，没有可见光晕。
+- Codex's image tool returns about 1.5 megapixels per image (1672 × 941 at 16:9) and takes no size argument; a pixel size written into the brief changes nothing. More than half of SciDraw's samples are 2048 × 1152 or larger.
+- `enlarge.py` with 4 tiles:
+  - two figures of 1672 × 941 came back 2696 and 3000 px wide;
+  - a portrait roadmap in Chinese went from 1086 × 1448 to 1843 × 2458, from 184 to 312 dpi when printed 150 mm wide;
+  - their 35, 82 and 102 texts were read back as listed, but for one capital O that OCR took for a zero;
+  - all 12 redrawn tiles lay within 2 px of their place;
+  - lines came out as fine or finer: 0.08–0.18% of the width.
+- With 6 tiles: a figure of 1672 × 941 came back at 3545 × 1995 (2.12×), with all 87 texts read back.
+- The weight of one line on the two sides of a cut:
+  - differs between two redraws by 5% at the median and 18% at most;
+  - differs over the same stretch in the original by 3% at the median and 19% at most;
+  - joined edge to edge, the difference showed as a step; passed into each other across the cut, it showed none (21 lines measured).
+- On 2026-11-14, the correction that keeps the original's flat colours when joining was measured on 4 real enlargements: white background 8–24 px from ink changed by 0 to +1.4 grey levels on average, and at most 2% of those pixels darkened by 5 levels or more. No visible halo.
 
-## 0.5.2 的全新会话复验（2026-11-14）
+## Fresh-session validation of 0.5.2 (2026-11-14)
 
-- 共 7 次全新 Codex 会话，花了 19 次生成：
-  - 4 次出新图，请求和 0.5.1 的 e2e60–63 相同，共 8 次生成；
-  - 1 次把现有图分 6 块放大，6 次生成；
-  - 2 次确认会话，5 次生成。
-- 每一次改图、每一块重画，都按文件路径用 `referenced_image_paths` 指定了原图。
-- 和 0.5.1 同题对比（指标依次为：OCR 行数、括号注释占比、图画部件数、配图个数、色块彩度、线宽）：
+- 7 fresh Codex sessions, 19 generations in all:
+  - 4 sessions made new figures from the same requests as the 0.5.1 runs e2e60–63, 8 generations;
+  - 1 session enlarged an existing figure in 6 tiles, 6 generations;
+  - 2 confirmation sessions, 5 generations.
+- Every edit and every tile redraw named its source file in `referenced_image_paths`.
+- Against 0.5.1 on the same requests (OCR lines, share of glossed lines, drawn parts, pictures, fill chroma, line weight):
 
-  | 图 | 0.5.1 | 0.5.2 |
+  | Figure | 0.5.1 | 0.5.2 |
   |---|---|---|
-  | RAG | 102 行、5%、238、30、10、2.0 px | 94 行、4%、312、40、9、1.8 px |
-  | 训练流程 | 83 行、2%、373、36、10、2.1 px | 83 行、2%、286、40、8、2.0 px |
-  | 机制图 | 43 行、9%、72、11、13、2.2 px | 43 行、9%、169、13、6、1.6 px（确认会话） |
-  | 16S 流程 | 51 行、6%、228、42、11、2.1 px | 33–34 行、3%、203–208、38–40、9–10、1.7–2.1 px |
+  | RAG | 102 lines, 5%, 238, 30, 10, 2.0 px | 94 lines, 4%, 312, 40, 9, 1.8 px |
+  | Training workflow | 83 lines, 2%, 373, 36, 10, 2.1 px | 83 lines, 2%, 286, 40, 8, 2.0 px |
+  | Mechanism | 43 lines, 9%, 72, 11, 13, 2.2 px | 43 lines, 9%, 169, 13, 6, 1.6 px (confirmation session) |
+  | 16S workflow | 51 lines, 6%, 228, 42, 11, 2.1 px | 33–34 lines, 3%, 203–208, 38–40, 9–10, 1.7–2.1 px |
 
-- **曾经改坏又改回来的一处**：
-  - 0.5.2 起初在 SKILL.md 的分流表里直接点名了 `figure-recipes.md`。
-  - 结果 4 个出图会话都把几份参考文件放在一条命令里读，或同时读。Codex 单条输出约 1.69 万 token 封顶，于是输出被截断，会话只分段补读了一部分。机制图的括号注释也从 8–9% 掉到了 3%。
-  - 0.5.1 的会话是先读 `illustration.md`，再单独读 `figure-recipes.md`。三次没有截断的会话，正好是注释最多的那几张。
-  - SKILL.md 改回 0.5.1 原文后，两次确认会话都按先后分开读，没有截断，机制图注释回到 9%。
-- **文字核对**：
-  - 在全部 113 张真实图上，`DIFFERS` 共 9 处，8 处是真问题。其中 3 处是这一轮新报的：标题被改写、"validation" 的 n 字形坏了、"prottein"。
-  - 后两处，会话事后都以为是 OCR 误报，裁图放大看了才知道是真错。所以"不能凭看图否决"这条规则必须保留。
-  - 唯一一处误报是 OCR 在两个词之间多读出一个孤立的 "g"（"Hepatic g glucose"）。这种情况只能靠打开裁图逐字读来排除，文档里写了这条复核路径。
-  - 这一轮还查出两类误报，已修：
-    - 图例一行里用分号隔开的两条缩写，被读成了一行；
-    - OCR 在 ℃ 旁边多读出一个 C。
-- **放大**：6 块重画全部被采用（匹配度 0.964–0.988），1672 × 941 放大到 3715 × 2091（2.22 倍），文字全部按清单读回，切口处看不出接缝。
-- **配色调淡把配图冲淡的问题，已修**（2026-11-14 看图确认机制图配色太淡，要求调到和其他图一样的水平）：
-  - 起因：机制图改线宽后，色块彩度从 15 漂到 16，比场景图上限 15 只多 1，就触发了"整体调淡"的改图。原来的改图措辞是按方框写的，会话把方框用的淡彩色值套到了细胞上，还把小部件也调淡了。
-  - 改法：`illustration.md` 第 5 节第 3 步做了三处修改：
-    - 超出 1–2 不算问题；
-    - 调色改图只动大面积底色，配图、图标和小部件保持原色，场景里的细胞体用"柔和淡彩"色值；
-    - 改图后再量一次：底色本来不到 30、强色面积却掉了一半以上，说明配图被冲淡了，退回改图前的版本。
-  - 同一张图三个版本的实测：
+- **A change that made things worse, and was taken back:**
+  - 0.5.2 first named `figure-recipes.md` in SKILL.md's routing table.
+  - All 4 figure sessions then read several references in one command, or at the same time. Codex cuts a command's output at about 16,900 tokens, so the output was truncated and the sessions re-read only parts of it. The mechanism figure's glosses fell from 8–9% to 3%.
+  - The 0.5.1 sessions had read `illustration.md` first and `figure-recipes.md` on its own afterwards. The three sessions without truncation are exactly the figures with the most glosses.
+  - With SKILL.md back to its 0.5.1 text, both confirmation sessions read the files one after the other, without truncation, and the mechanism's glosses were back at 9%.
+- **The text check:**
+  - Of 9 `DIFFERS` across all 113 real figures, 8 were real faults. 3 of them were new in this round: a rewritten title, a malformed "n" in "validation", and "prottein".
+  - In the last two cases the session believed afterwards that OCR had misread, and only the enlarged crop showed the fault was real. The rule that a look at the figure does not overrule the check stays.
+  - The one false verdict was a lone "g" that OCR read between two words ("Hepatic g glucose"). Only reading the crop letter by letter rules that out, and the documents give that way of checking.
+  - Two more kinds of false verdict found in this round are fixed:
+    - two abbreviations in one legend row, separated by a semicolon, read as one line;
+    - a C that OCR read beside a ℃ sign.
+- **Enlargement:** all 6 redrawn tiles were used (match 0.964–0.988); 1672 × 941 became 3715 × 2091 (2.22×), every text read back as listed, and no seam is visible at the cuts.
+- **Fixed: a recolour edit that washed out the pictures** (on 2026-11-14 the mechanism figure was found too pale, and was to be brought to the colour level of the other figures):
+  - Cause: after an edit to its line weights, the mechanism's fill chroma drifted from 15 to 16, one above the limit of 15 for scenes, and that set off an edit that paled everything. The edit's wording was written for boxes: the session put the box tints on the cells, and paled the small parts too.
+  - The fix, in `illustration.md`, section 5, step 3:
+    - a reading one or two above the limit is no fault;
+    - a recolour edit changes only the large fills and keeps pictures, icons and small parts in their colours; in a scene, the bodies of cells take the soft tints;
+    - measure again after the edit: where the fills read under 30 and the share in strong colour fell by half or more, the edit drained the pictures, so keep the figure from before it.
+  - Three versions of the same figure:
 
-    | 版本 | 色块彩度 | 强色面积 | 可见颜色面积 | 配图内着色 |
+    | Version | Fill chroma | Strong colour | Visible colour | Colour inside the pictures |
     |---|---|---|---|---|
-    | 改图前 | 16 | 3% | 8.3% | 23% |
-    | 旧措辞调淡后 | 6 | 1% | 2.7% | 4% |
-    | 新措辞调淡后（实测一次改图） | 10 | 2% | 4.1% | 14% |
-    | 其它几张图 | 8–10 | 2–3% | 6–9% | 14–22% |
+    | Before the recolour | 16 | 3% | 8.3% | 23% |
+    | Recoloured with the old wording | 6 | 1% | 2.7% | 4% |
+    | Recoloured with the new wording (one real edit) | 10 | 2% | 4.1% | 14% |
+    | The other figures | 8–10 | 2–3% | 6–9% | 14–22% |
 
-    按新规则，这张图不会再改，交付的就是"改图前"那一版。确实需要调淡时，新措辞的结果也落在其它图的范围里。
-  - 新措辞那次改图后，OCR 把正确的 "Fatty acid synthesis ↓" 切成两个互相重叠的框，报了一处 `DIFFERS`；裁图看是对的。这是第三类罕见的 OCR 误报，靠文档里"打开裁图逐字读"的复核路径排除。
-- **仍留给以后的问题**：线宽 3.2 px 比上限 3 px 只多一点，也触发了一次改图。阈值要不要留余量，待定。
+    Under the new rules this figure is not recoloured at all: the version before the recolour is the one delivered. Where a recolour is needed, the new wording also lands within the range of the other figures.
+  - After the edit with the new wording, OCR cut a correct "Fatty acid synthesis ↓" into two overlapping boxes and reported a `DIFFERS`; the crop shows the text is right. This is a third, rare kind of false verdict, ruled out by reading the crop letter by letter, as the documents say.
+- **Still open:** a line weight of 3.2 px, just above the limit of 3 px, also set off an edit. Whether the limits should have some slack is undecided.
