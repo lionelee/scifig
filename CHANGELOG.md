@@ -24,6 +24,7 @@ First public release.
   - `export_figure.py`, `panels.py`, `editable.py`, `scistyle.py` and `journals.py`.
 - `eval/`: tools for end-to-end runs with Codex, a regression of the text check over real figures, and comparisons with published samples. `CALIBRATION.md` holds the measurements behind the rules.
 - A gallery on GitHub Pages.
+- Published to npm as `scifig-agents`, and to GitHub Packages as `@lionelee/scifig-agents`.
 
 [Unreleased]: https://github.com/lionelee/scifig/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/lionelee/scifig/releases/tag/v0.1.0

@@ -1,0 +1,30 @@
+name: Publish to GitHub Packages
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: "@lionelee"
+      - name: Node tests
+        run: npm test
+      - name: Publish as @lionelee/scifig-agents
+        # GitHub Packages takes scoped names only; on npm the same files are the package scifig-agents.
+        run: |
+          npm pkg set name=@lionelee/scifig-agents
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

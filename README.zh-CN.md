@@ -5,7 +5,7 @@
 给 AI 编程 agent 用的科研绘图技能包。一条命令就能把 `scifig` skill 装进 Codex、Claude Code、Antigravity 等检测到的 agent：
 
 ```sh
-npx github:lionelee/scifig setup
+npx scifig-agents setup
 ```
 
 装好后，在 agent 里直接提需求就行，例如："画一张 Transformer 模型架构图"、"画一张图文摘要"、"用这个 CSV 画一张 Nature 单栏的图"、"把这张图导出成 600 dpi 的 TIFF"、"看看这张图能不能投 Cell"。
@@ -33,12 +33,12 @@ npx github:lionelee/scifig setup
 需要 Node.js 18.3 以上。运行 Python 脚本需要 [uv](https://docs.astral.sh/uv/)，脚本的依赖在第一次运行时由 uv 自动下载，版本固定在测试通过的那一天。
 
 ```sh
-npx github:lionelee/scifig setup              # 列出计划，确认后安装到检测到的 agent
-npx github:lionelee/scifig setup --dry-run    # 只看计划，不写任何文件
-npx github:lionelee/scifig setup --client codex --client claude_code --yes
-npx github:lionelee/scifig setup --dir ~/somewhere/skills --yes
-npx github:lionelee/scifig doctor             # 各 agent 的安装状态、生图工具、uv
-npx github:lionelee/scifig uninstall          # 只删除本工具安装的目录
+npx scifig-agents setup              # 列出计划，确认后安装到检测到的 agent
+npx scifig-agents setup --dry-run    # 只看计划，不写任何文件
+npx scifig-agents setup --client codex --client claude_code --yes
+npx scifig-agents setup --dir ~/somewhere/skills --yes
+npx scifig-agents doctor             # 各 agent 的安装状态、生图工具、uv
+npx scifig-agents uninstall          # 只删除本工具安装的目录
 ```
 
 自动检测的 agent 和 [rea-agents](https://www.npmjs.com/package/rea-agents) 6.9.0 一样，共 29 个。判断规则也一样：agent 的配置文件或它自己的目录存在，就算装了。`--client` 用的也是同一套 id，`doctor` 会列出这台机器上找到了哪些。skill 装到哪里分两种情况：
@@ -67,7 +67,7 @@ Gemini CLI 和 DeepSeek Harness 设了 `GEMINI_CLI_HOME`、`DSH_AGENTS_HOME` 时
 - 上次安装被中断时会留下复制了一半的临时目录，下次 setup 会先清掉。
 - 装好后要新开一个 agent 会话，才会加载到这个 skill。
 
-也可以克隆仓库后在本地运行：`node bin/scifig.mjs setup`。
+同一个包在 GitHub Packages 上叫 `@lionelee/scifig-agents`。不经过 npm 仓库的话，可以直接从 GitHub 运行 `npx github:lionelee/scifig setup`，或者克隆仓库后运行 `node bin/scifig.mjs setup`。
 
 ## 使用前须知
 

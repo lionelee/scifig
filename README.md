@@ -5,7 +5,7 @@ English | [中文](README.zh-CN.md)
 A skill pack that teaches AI coding agents to make publication-ready scientific figures. One command installs the `scifig` skill into Codex, Claude Code, Antigravity and the other agents it finds on your machine:
 
 ```sh
-npx github:lionelee/scifig setup
+npx scifig-agents setup
 ```
 
 Then ask your agent in plain words: "Draw a Transformer architecture figure for my group-meeting slides", "Make a graphical abstract", "Plot this CSV as a Nature single-column figure", "Export this figure as a 600 dpi TIFF", "Can this figure go to Cell?".
@@ -33,15 +33,15 @@ Then ask your agent in plain words: "Draw a Transformer architecture figure for 
 Needs Node.js 18.3 or later. The Python scripts need [uv](https://docs.astral.sh/uv/), which downloads their dependencies on first run, pinned to the day they were tested.
 
 ```sh
-npx github:lionelee/scifig setup              # show the plan, install after you confirm
-npx github:lionelee/scifig setup --dry-run    # show the plan only, write nothing
-npx github:lionelee/scifig setup --client codex --client claude_code --yes
-npx github:lionelee/scifig setup --dir ~/somewhere/skills --yes
-npx github:lionelee/scifig doctor             # install state of each agent, image tools, uv
-npx github:lionelee/scifig uninstall          # remove only what this tool installed
+npx scifig-agents setup              # show the plan, install after you confirm
+npx scifig-agents setup --dry-run    # show the plan only, write nothing
+npx scifig-agents setup --client codex --client claude_code --yes
+npx scifig-agents setup --dir ~/somewhere/skills --yes
+npx scifig-agents doctor             # install state of each agent, image tools, uv
+npx scifig-agents uninstall          # remove only what this tool installed
 ```
 
-From a clone of this repository: `node bin/scifig.mjs setup`.
+The same package is on GitHub Packages as `@lionelee/scifig-agents`. Without a registry, run it straight from GitHub with `npx github:lionelee/scifig setup`, or from a clone of this repository with `node bin/scifig.mjs setup`.
 
 ### Supported agents
 
