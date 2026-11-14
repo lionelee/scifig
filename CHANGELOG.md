@@ -4,6 +4,12 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-15
+
+### Changed
+
+- Reworded the descriptions of agent detection in the READMEs, CONTRIBUTING, the Pages site and the code comments.
+
 ## [0.2.0] - 2026-11-14
 
 ### Added
@@ -39,6 +45,7 @@ First public release.
 - A gallery on GitHub Pages.
 - Published to npm as `scifig-agents`, and to GitHub Packages as `@lionelee/scifig-agents`.
 
-[Unreleased]: https://github.com/lionelee/scifig/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/lionelee/scifig/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/lionelee/scifig/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/lionelee/scifig/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/lionelee/scifig/releases/tag/v0.1.0
