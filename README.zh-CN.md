@@ -10,7 +10,18 @@ npx scifig-agents setup
 
 装好后，在 agent 里直接提需求就行，例如："画一张 Transformer 模型架构图"、"画一张图文摘要"、"用这个 CSV 画一张 Nature 单栏的图"、"把这张图导出成 600 dpi 的 TIFF"、"看看这张图能不能投 Cell"。
 
-**示例画廊**：<https://lionelee.github.io/scifig/>，都是 Codex 按这个 skill 从一句话需求做到交付的图。
+<table>
+  <tr>
+    <td width="50%"><img src="docs/assets/rag-architecture.webp" width="100%" alt="检索增强生成（RAG）系统的架构总览：离线建索引流程、在线问答链路，安全、评估和运维面板，每张卡片配一幅小插画。"><br><b>RAG 系统架构</b></td>
+    <td width="50%"><img src="docs/assets/ml-training-workflow.webp" width="100%" alt="机器学习训练流程：两行共八张编号卡片，分数据准备和模型开发，每张有小插画、四行要点和产出；另有迭代回路，评估指标、防数据泄漏和可复现性面板，以及图例。"><br><b>机器学习训练流程</b></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/assets/metformin-mechanism.webp" width="100%" alt="二甲双胍在肝细胞中的作用机制，分四步：摄取、抑制线粒体复合物 I、激活 AMPK，以及对 ACC、mTORC1 和糖异生基因的作用，最终降低血糖。"><br><b>二甲双胍如何降血糖</b></td>
+    <td width="50%"><img src="docs/assets/mouse-16s-workflow-zh.webp" width="100%" alt="中文标注的小鼠肠道菌群 16S rRNA 测序实验流程，八张编号卡片：分组饲养、粪便采集、DNA 提取、PCR、建库测序，以及数据处理、物种注释和多样性分析，附图例和缩写说明。"><br><b>小鼠肠道菌群 16S rRNA 测序流程（中文）</b></td>
+  </tr>
+</table>
+
+每张图都是一个全新的 Codex 会话只拿着这个 skill 和一句话需求，从头做到交付的。需求原文和每张图的制作过程见[示例画廊](https://lionelee.github.io/scifig/)。
 
 ## 它做什么
 
@@ -33,13 +44,15 @@ npx scifig-agents setup
 需要 Node.js 20.12 以上。运行 Python 脚本需要 [uv](https://docs.astral.sh/uv/)，脚本的依赖在第一次运行时由 uv 自动下载，版本固定在测试通过的那一天。
 
 ```sh
-npx scifig-agents setup              # 列出计划，确认后安装到检测到的 agent
+npx scifig-agents setup              # 在列表里选目录，看过改动再确认
 npx scifig-agents setup --dry-run    # 只看计划，不写任何文件
 npx scifig-agents setup --client codex --client claude_code --yes
 npx scifig-agents setup --dir ~/somewhere/skills --yes
 npx scifig-agents doctor             # 各 agent 的安装状态、生图工具、uv
 npx scifig-agents uninstall          # 只删除本工具安装的目录
 ```
+
+在终端里运行时，`setup` 会列出这些 agent 读的 10 个 skills 目录，检测到的 agent 读的目录已经勾好。用方向键移动，空格勾选或取消，回车确认；它会先列出要做的改动，再问一次。加 `--accessible` 会逐个目录提问，不显示列表。用 `--client` 或 `--dir` 指定了目标就跳过列表，加 `--yes` 则不再提问。
 
 自动检测的 agent 和 [rea-agents](https://www.npmjs.com/package/rea-agents) 6.9.0 一样，共 29 个。判断规则也一样：agent 的配置文件或它自己的目录存在，就算装了。`--client` 用的也是同一套 id，`doctor` 会列出这台机器上找到了哪些。skill 装到哪里分两种情况：
 
@@ -109,7 +122,7 @@ Gemini CLI 和 DeepSeek Harness 设了 `GEMINI_CLI_HOME`、`DSH_AGENTS_HOME` 时
 
 ```
 bin/scifig.mjs            安装器入口：setup、uninstall、doctor
-lib/                      各 agent 的 skill 目录和安装逻辑
+lib/                      各 agent 的 skill 目录、安装逻辑和终端交互界面
 skills/scifig/
   SKILL.md                入口：按需求分流
   references/             插图、版式、结构化图、图表、导出与检查、AI 图片政策、期刊规格数据
