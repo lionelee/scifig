@@ -1,0 +1,39 @@
+name: Bug report
+description: The installer or one of the scripts did something wrong.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for the report. If a generated figure came out wrong, use the "Figure problem" template instead.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The output of `npx github:lionelee/scifig --version`, or the version in package.json.
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: The command that went wrong, and the agent that ran it if it was an agent.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: The whole output, with any error message.
+      render: text
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Node.js version and uv version (`doctor` prints the last two).
