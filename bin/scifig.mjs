@@ -75,7 +75,7 @@ const foundIn = (target, context) =>
 /**
  * The --client/--dir choices, or every client accepted by `byDefault` when none are given: one target per
  * folder. Agents that read the same folder share one target, which names them all; the shared
- * ~/.agents/skills is client "shared", as in rea-agents.
+ * ~/.agents/skills is client "shared".
  */
 function selectTargets(options, context, byDefault) {
   const unknown = options.client.filter((id) => !CLIENTS.some((c) => c.id === id));

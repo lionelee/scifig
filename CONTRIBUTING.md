@@ -35,7 +35,7 @@ See [eval/README.md](eval/README.md) for the evaluation tools and the local data
 
 ## Adding an agent
 
-Agent detection mirrors [rea-agents](https://www.npmjs.com/package/rea-agents) (`dist/application/SupportedClients.js`): the same ids, the same evidence that an agent is present, and the same skills folder, or the shared `~/.agents/skills` when the agent has none of its own. Add an agent there first if you can, then mirror it in `lib/clients.mjs` with a test in `test/cli.test.mjs`. If the agent has a built-in image tool, say which in `imageTool` and describe it in `skills/scifig/references/illustration.md`, section 1.
+Agents are listed in `lib/clients.mjs`: each has an id, the evidence that it is present, and its own skills folder, or the shared `~/.agents/skills` when it has none of its own. Add the agent there with a test in `test/cli.test.mjs`. If the agent has a built-in image tool, say which in `imageTool` and describe it in `skills/scifig/references/illustration.md`, section 1.
 
 ## Pull requests
 

@@ -8,7 +8,7 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 ### Added
 
-- At a terminal, `setup` asks before it writes, as rea-agents' setup does. It names the agents it found, lists the ten skills folders that the supported agents read with those of the agents found and those holding an install of its own already ticked, then shows the changes and asks for confirmation. The prompts come from `@clack/prompts`.
+- At a terminal, `setup` asks before it writes. It names the agents it found, lists the ten skills folders that the supported agents read with those of the agents found and those holding an install of its own already ticked, then shows the changes and asks for confirmation. The prompts come from `@clack/prompts`.
 - `--accessible` asks about one folder at a time instead of showing the list.
 - The READMEs show four example figures.
 
@@ -23,7 +23,7 @@ First public release.
 
 ### Added
 
-- The `scifig-agents` installer with `setup`, `uninstall` and `doctor`. It detects the 29 agents that rea-agents 6.9.0 detects and installs the skill into each agent's own skills folder, or once into the shared `~/.agents/skills`. Each install records its version and a content digest; the installer refuses folders it did not install and clears what an interrupted setup left behind.
+- The `scifig-agents` installer with `setup`, `uninstall` and `doctor`. It detects 29 agents and installs the skill into each agent's own skills folder, or once into the shared `~/.agents/skills`. Each install records its version and a content digest; the installer refuses folders it did not install and clears what an interrupted setup left behind.
 - The `scifig` skill, which routes a figure request to the right method:
   - briefs for the host agent's image tool, with layouts per figure type, a six-layer content plan, tested visual styles, a low-saturation palette with colour codes, hairline weights, rules for routing connectors and a verification procedure;
   - code-drawn diagrams for PRISMA and CONSORT flows and formal notations;

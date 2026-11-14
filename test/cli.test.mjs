@@ -43,8 +43,8 @@ function listFiles(dir, prefix = "") {
 const codexTarget = (home) => join(home, ".agents", "skills", "scifig");
 const antigravityTarget = (home) => join(home, ".gemini", "config", "skills", "scifig");
 
-// The agents rea-agents 6.9.0 detects (dist/application/SupportedClients.js), in its order and with its ids.
-const REA_CLIENTS = [
+// The 29 agents setup detects, in the order and with the ids it uses.
+const SUPPORTED_CLIENTS = [
   "claude_code", "claude_desktop", "codex", "cursor", "codebuddy", "cline", "gemini_cli", "windsurf", "devin",
   "opencode", "antigravity", "copilot_cli", "commandcode", "qwen_code", "kimi", "vscode", "trae", "workbuddy",
   "lm_studio", "grok_build", "omp", "pi", "hermes", "qoder", "droid", "zcode", "dsh", "freebuff", "grok_bot",
@@ -186,7 +186,7 @@ test("doctor reports the state of every supported agent", () => {
   run(home, ["setup", "--yes", "--json"]);
   const out = json(run(home, ["doctor", "--json"]));
   const byClient = Object.fromEntries(out.clients.map((c) => [c.client, c]));
-  assert.deepEqual(Object.keys(byClient), REA_CLIENTS);
+  assert.deepEqual(Object.keys(byClient), SUPPORTED_CLIENTS);
   assert.equal(byClient.codex.detected, true);
   assert.equal(byClient.codex.state, "installed");
   assert.equal(byClient.codex.installed_version, VERSION);
@@ -203,9 +203,9 @@ test("doctor says what still works in an agent without an image tool", () => {
   assert.match(line, /no built-in image tool \(diagrams, charts, export and checks still work\)/);
 });
 
-test("the agents detected are those rea-agents detects, with its ids", () => {
+test("doctor lists the 29 supported agents in order, with their ids", () => {
   const out = json(run(makeHome(), ["doctor", "--json"]));
-  assert.deepEqual(out.clients.map(({ client }) => client), REA_CLIENTS);
+  assert.deepEqual(out.clients.map(({ client }) => client), SUPPORTED_CLIENTS);
 });
 
 test("agents without a skills folder of their own share one copy in ~/.agents/skills", () => {
@@ -226,7 +226,7 @@ test("an agent with a skills folder of its own gets the skill there", () => {
   ]);
 });
 
-test("an Antigravity folder is Gemini CLI's too, as rea-agents counts it", () => {
+test("an Antigravity folder counts as Gemini CLI's too", () => {
   const home = makeHome(".gemini/config");
 
   assert.deepEqual(plan(home, []), [
@@ -242,7 +242,7 @@ test("an agent is found by its configuration file as well as by its folder", () 
   assert.deepEqual(plan(home, []), [{ client: "claude_code", clients: ["claude_code"], path: join(home, ".claude", "skills", "scifig") }]);
 });
 
-test("the folder overrides that rea-agents honours are honoured", () => {
+test("the agents' folder overrides in the environment are honoured", () => {
   const home = makeHome();
   const env = { QODER_CONFIG_DIR: join(home, "q"), FACTORY_HOME_OVERRIDE: join(home, "f"), GEMINI_CLI_HOME: join(home, "g"), DSH_AGENTS_HOME: join(home, "d") };
 
