@@ -112,6 +112,12 @@ test("Enter twice installs into the folders ticked at the start, after showing w
   assert.match(text, /Done\. Start a new session in Claude Code, Codex, and Cursor so they pick up the skill\./);
 });
 
+test("with one agent to restart, the last line names it in the singular", async () => {
+  const { code, text } = await runSetup({ rows: [CLAUDE], steps: [[LIST, KEY.enter], ["Apply this change?", KEY.enter]] });
+  assert.equal(code, 0);
+  assert.match(text, /Done\. Start a new session in Claude Code so it picks up the skill\./);
+});
+
 test("Space unticks a folder, which is then left alone", async () => {
   const { code, applied } = await runSetup({
     rows: [CLAUDE, SHARED, TRAE],
