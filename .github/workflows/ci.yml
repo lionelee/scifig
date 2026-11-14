@@ -18,7 +18,7 @@ jobs:
           node-version: 22
       - name: Node tests
         run: npm test
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.3.3  # this action publishes no major-version tag
       - name: Python tests
         env:
           PYTHONDONTWRITEBYTECODE: "1"
