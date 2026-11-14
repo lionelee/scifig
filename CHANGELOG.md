@@ -4,6 +4,19 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-14
+
+### Added
+
+- At a terminal, `setup` asks before it writes, as rea-agents' setup does. It names the agents it found, lists the ten skills folders that the supported agents read with those of the agents found and those holding an install of its own already ticked, then shows the changes and asks for confirmation. The prompts come from `@clack/prompts`.
+- `--accessible` asks about one folder at a time instead of showing the list.
+- The READMEs show four example figures.
+
+### Changed
+
+- Needs Node.js 20.12 or later, up from 18.3, as `@clack/prompts` does.
+- At a terminal, `uninstall` shows its plan and asks in the same style as `setup`.
+
 ## [0.1.0] - 2026-11-14
 
 First public release.
@@ -26,5 +39,6 @@ First public release.
 - A gallery on GitHub Pages.
 - Published to npm as `scifig-agents`, and to GitHub Packages as `@lionelee/scifig-agents`.
 
-[Unreleased]: https://github.com/lionelee/scifig/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/lionelee/scifig/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/lionelee/scifig/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/lionelee/scifig/releases/tag/v0.1.0

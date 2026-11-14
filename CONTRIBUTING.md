@@ -11,9 +11,10 @@ Thanks for helping. This file says how the project is built and checked, so that
 
 ## Set up
 
-You need Node.js 18.3 or later and [uv](https://docs.astral.sh/uv/). uv brings the Python version and packages each script asks for in its PEP 723 header.
+You need Node.js 20.12 or later and [uv](https://docs.astral.sh/uv/). uv brings the Python version and packages each script asks for in its PEP 723 header.
 
 ```sh
+npm install
 npm test
 PYTHONDONTWRITEBYTECODE=1 uv run --with pytest --with pillow --with numpy --with matplotlib --with python-pptx pytest test/python -q -p no:cacheprovider
 ```

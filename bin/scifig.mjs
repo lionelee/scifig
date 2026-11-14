@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { CLIENTS, isPresent, sharedSkillsDir, skillsDirOf } from "../lib/clients.mjs";
 import { SKILL_NAME, applyInstall, applyUninstall, digestTree, planInstall, planUninstall, readManifest } from "../lib/install.mjs";
+import { isInteractive, setupFlow, uninstallFlow } from "../lib/tui.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VERSION = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).version;
@@ -29,11 +30,13 @@ Commands:
   doctor      Show where the skill is installed and what its scripts need
 
 Options:
-  --client <id>   An agent to install into (repeatable; default: every agent found):
+  --client <id>   An agent to install into, instead of choosing from the list (repeatable;
+                  without a terminal, the default is every agent found):
 ${CLIENT_IDS}
   --dir <path>    A skills folder to use as well (repeatable)
   --dry-run       Show the plan without changing anything
   --yes           Apply without asking
+  --accessible    Ask about one folder at a time instead of showing a list
   --json          Machine-readable output
   --version       Print the version
   --help          Print this help`;
@@ -50,6 +53,7 @@ function parse(argv) {
         dir: { type: "string", multiple: true, default: [] },
         "dry-run": { type: "boolean", default: false },
         yes: { type: "boolean", default: false },
+        accessible: { type: "boolean", default: false },
         json: { type: "boolean", default: false },
         version: { type: "boolean", default: false },
         help: { type: "boolean", default: false },
@@ -62,6 +66,11 @@ function parse(argv) {
 
 const isExplicit = (options) => options.client.length > 0 || options.dir.length > 0;
 const hostContext = () => ({ home: homedir(), env: process.env, platform: process.platform });
+const CLIENT_BY_ID = new Map(CLIENTS.map((c) => [c.id, c]));
+
+/** The agents found on this machine among those that read a target's folder, by name. */
+const foundIn = (target, context) =>
+  target.clients.map((id) => CLIENT_BY_ID.get(id)).filter((c) => isPresent(c, context)).map((c) => c.label);
 
 /**
  * The --client/--dir choices, or every client accepted by `byDefault` when none are given: one target per
@@ -146,12 +155,25 @@ async function execute(command, options, targets, { apply, idle, fatal, done }) 
 
 function setup(options) {
   const context = hostContext();
+  const source = { dir: SOURCE_DIR, version: VERSION, digest: digestTree(SOURCE_DIR) };
+  if (isInteractive(options)) {
+    // Every folder is offered unless --client or --dir names the targets; the list ticks those of the agents found.
+    const rows = selectTargets(options, context, () => true).map((t) => ({ ...t, ...planInstall(t.path, source), found: foundIn(t, context) }));
+    return setupFlow({
+      version: VERSION,
+      rows,
+      detected: CLIENTS.filter((c) => isPresent(c, context)).map((c) => c.label),
+      choose: !isExplicit(options),
+      accessible: options.accessible,
+      apply: (path) => applyInstall(path, source),
+      home: context.home,
+    });
+  }
   const targets = selectTargets(options, context, (c) => isPresent(c, context));
   if (targets.length === 0) {
     console.error("No supported agent found. Choose one with --client, or pass a skills folder with --dir.");
     return 1;
   }
-  const source = { dir: SOURCE_DIR, version: VERSION, digest: digestTree(SOURCE_DIR) };
   return execute("setup", options, targets.map((t) => ({ ...t, ...planInstall(t.path, source) })), {
     apply: (path) => applyInstall(path, source),
     idle: ["unchanged"],
@@ -161,10 +183,14 @@ function setup(options) {
 }
 
 function uninstall(options) {
+  const context = hostContext();
   // With no explicit choice, look everywhere and report only folders that exist.
-  const targets = selectTargets(options, hostContext(), () => true)
+  const targets = selectTargets(options, context, () => true)
     .map((t) => ({ ...t, ...planUninstall(t.path) }))
     .filter((t) => isExplicit(options) || t.action !== "absent");
+  if (isInteractive(options)) {
+    return uninstallFlow({ targets, accessible: options.accessible, apply: applyUninstall, home: context.home });
+  }
   return execute("uninstall", options, targets, {
     apply: applyUninstall,
     idle: ["absent", "blocked"],

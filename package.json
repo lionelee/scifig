@@ -1,6 +1,6 @@
 {
   "name": "scifig-agents",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Agent skill pack for publication-ready scientific figures: illustration briefs for the host agent's own image tool, journal-style charts, print exports, editable SVG/PPTX and pre-submission checks.",
   "author": "lionelee",
   "homepage": "https://lionelee.github.io/scifig/",
@@ -30,7 +30,7 @@
     "test": "node --test test/*.test.mjs"
   },
   "engines": {
-    "node": ">=18.3"
+    "node": ">=20.12"
   },
   "keywords": [
     "agent-skills",
@@ -40,5 +40,8 @@
     "antigravity",
     "claude-code"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "1.9.0"
+  }
 }

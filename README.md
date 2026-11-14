@@ -10,7 +10,18 @@ npx scifig-agents setup
 
 Then ask your agent in plain words: "Draw a Transformer architecture figure for my group-meeting slides", "Make a graphical abstract", "Plot this CSV as a Nature single-column figure", "Export this figure as a 600 dpi TIFF", "Can this figure go to Cell?".
 
-**Gallery:** <https://lionelee.github.io/scifig/>: figures Codex made with this skill, from a one-sentence request to the delivered file.
+<table>
+  <tr>
+    <td width="50%"><img src="docs/assets/rag-architecture.webp" width="100%" alt="Architecture overview of a retrieval-augmented generation system, with an offline indexing pipeline, an online question-answering path, safety, evaluation and maintenance panels, and an illustration on every card."><br><b>RAG system architecture</b></td>
+    <td width="50%"><img src="docs/assets/ml-training-workflow.webp" width="100%" alt="Machine-learning training workflow in eight numbered cards over two rows, data preparation and model development, each with a small illustration, four lines and its output; an iteration loop, panels on metrics, leakage safeguards and reproducibility, and a legend."><br><b>Machine-learning training workflow</b></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/assets/metformin-mechanism.webp" width="100%" alt="Mechanism of metformin in a hepatocyte in four steps: uptake, inhibition of mitochondrial complex I, AMPK activation, and its effects on ACC, mTORC1 and gluconeogenic genes, ending in lower blood glucose."><br><b>How metformin lowers blood glucose</b></td>
+    <td width="50%"><img src="docs/assets/mouse-16s-workflow-zh.webp" width="100%" alt="Experimental workflow in Chinese for 16S rRNA sequencing of mouse gut microbiota in eight numbered cards: grouping and feeding, faeces collection, DNA extraction, PCR, library preparation and sequencing, then data processing, taxonomic annotation and diversity analysis, with a legend and abbreviations."><br><b>16S rRNA sequencing workflow, in Chinese</b></td>
+  </tr>
+</table>
+
+Each was made end to end by a fresh Codex session that had only this skill and a one-sentence request. The requests, and how each figure was made, are in the [gallery](https://lionelee.github.io/scifig/).
 
 ## What it does
 
@@ -30,10 +41,10 @@ Then ask your agent in plain words: "Draw a Transformer architecture figure for 
 
 ## Install
 
-Needs Node.js 18.3 or later. The Python scripts need [uv](https://docs.astral.sh/uv/), which downloads their dependencies on first run, pinned to the day they were tested.
+Needs Node.js 20.12 or later. The Python scripts need [uv](https://docs.astral.sh/uv/), which downloads their dependencies on first run, pinned to the day they were tested.
 
 ```sh
-npx scifig-agents setup              # show the plan, install after you confirm
+npx scifig-agents setup              # pick folders in a list, review, confirm
 npx scifig-agents setup --dry-run    # show the plan only, write nothing
 npx scifig-agents setup --client codex --client claude_code --yes
 npx scifig-agents setup --dir ~/somewhere/skills --yes
@@ -41,7 +52,9 @@ npx scifig-agents doctor             # install state of each agent, image tools,
 npx scifig-agents uninstall          # remove only what this tool installed
 ```
 
-The same package is on GitHub Packages as `@lionelee/scifig-agents`. Without a registry, run it straight from GitHub with `npx github:lionelee/scifig setup`, or from a clone of this repository with `node bin/scifig.mjs setup`.
+In a terminal, `setup` lists the ten skills folders that the supported agents read, with the folders of the agents it found already ticked. Move with the arrow keys, tick or untick with Space, and press Enter; it then shows what it will change and asks once more. `--accessible` asks about one folder at a time instead of showing the list. `--client` or `--dir` skips the list, and `--yes` skips the questions.
+
+The same package is on GitHub Packages as `@lionelee/scifig-agents`. Without a registry, run it straight from GitHub with `npx github:lionelee/scifig setup`, or from a clone of this repository: run `npm install` once, then `node bin/scifig.mjs setup`.
 
 ### Supported agents
 
@@ -111,7 +124,7 @@ The measurements behind these notes are recorded in [CALIBRATION.md](CALIBRATION
 
 ```
 bin/scifig.mjs        installer entry point: setup, uninstall, doctor
-lib/                  the agent table (aligned with rea-agents) and the install logic
+lib/                  the agent table (aligned with rea-agents), the install logic and the terminal prompts
 skills/scifig/
   SKILL.md            entry point: routes each request
   references/         illustration, figure recipes, diagrams, charts, export and checks, AI policies, journal data
