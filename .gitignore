@@ -1,0 +1,7 @@
+node_modules/
+__pycache__/
+.pytest_cache/
+*.tgz
+.DS_Store
+eval/runs
+eval/samples

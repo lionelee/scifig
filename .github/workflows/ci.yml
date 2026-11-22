@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm ci
+      - name: Node tests
+        run: npm test
+      - uses: astral-sh/setup-uv@v10.3.3  # this action publishes no major-version tag
+        with:
+          cache-dependency-glob: skills/scifig/scripts/*.py  # the scripts declare their dependencies in PEP 723 headers
+      - name: Python tests
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: uv run --with pytest --with pillow --with numpy --with matplotlib --with python-pptx pytest test/python -q -p no:cacheprovider

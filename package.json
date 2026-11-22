@@ -1,0 +1,47 @@
+{
+  "name": "scifig-agents",
+  "version": "0.2.2",
+  "description": "Agent skill pack for publication-ready scientific figures: illustration briefs for the host agent's own image tool, journal-style charts, print exports, editable SVG/PPTX and pre-submission checks.",
+  "author": "lionelee",
+  "homepage": "https://lionelee.github.io/scifig/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lionelee/scifig.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lionelee/scifig/issues"
+  },
+  "type": "module",
+  "bin": {
+    "scifig": "bin/scifig.mjs",
+    "scifig-agents": "bin/scifig.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "skills",
+    "!**/__pycache__",
+    "README.md",
+    "README.zh-CN.md",
+    "NOTICE.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20.12"
+  },
+  "keywords": [
+    "agent-skills",
+    "scientific-figures",
+    "matplotlib",
+    "codex",
+    "antigravity",
+    "claude-code"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "1.9.0"
+  }
+}

@@ -1,0 +1,64 @@
+name: Figure problem
+description: A figure made with the skill came out wrong.
+labels: [figure]
+body:
+  - type: markdown
+    attributes:
+      value: The brief, the label list and the outputs of the two checks show whether the brief, the image tool or a check went wrong, so please attach what you have.
+  - type: input
+    id: agent
+    attributes:
+      label: Agent and image tool
+      placeholder: Codex with image_gen
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is wrong
+      multiple: true
+      options:
+        - Text (a typo, a missing or extra label)
+        - Lines and arrows
+        - Colours or line weight
+        - Content (too little, too much, wrong)
+        - Resolution or size
+        - The text check's verdict
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: Your request
+      description: What you asked the agent for.
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What is wrong in the figure
+    validations:
+      required: true
+  - type: textarea
+    id: brief
+    attributes:
+      label: The brief
+      description: The brief the agent wrote for the image tool (agents often save it as brief.txt).
+      render: text
+  - type: textarea
+    id: labels
+    attributes:
+      label: labels.txt
+      render: text
+  - type: textarea
+    id: checks
+    attributes:
+      label: Check output
+      description: The output of `check_text.py` and of `check_figure.py --look`.
+      render: text
+  - type: textarea
+    id: image
+    attributes:
+      label: The figure
+      description: Drag the image file here.
